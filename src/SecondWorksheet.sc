@@ -21,6 +21,14 @@ Test7.noParameterMethod
 
 Test7 noParameterMethod
 
+def name: String = {
+  val title = "Professor"
+  val name = "Funkenstein"
+  title + " " + name
+}
+
+name
+
 
 
 

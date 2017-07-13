@@ -1,29 +1,26 @@
+class Cat(val colour: String, val food: String) {}
 
-object Oswald {
-
-  val colour: String = "Black"
-  val food: String = "Milk"
-
-}
-
-object calc {
-
-  def square(x: Double) = x * x
-  def cube(x: Double) = x * square(x)
-
-}
+val oswald = new Cat(colour = "Black", food = "Milk")
+val henderson = new Cat("Ginger", "Chips")
+val quentin = new Cat("Tabby and white", "Curry")
 
 
-object calc2 {
+object ChipShop {
 
-  def square(x: Double) = x * x
-  def cube(x: Double) = x * square(x)
-  def square(x: Int) = x * x
-  def cube(x: Int) = x * square(x)
+  def willServe(cat: Cat): Boolean =
+    if (cat.food == "Chips")
+      true
+    else
+      false
+
+  assert(willServe(oswald) == false)
+  assert(willServe(henderson) == true)
+  assert(willServe(oswald) == false)
 
 }
 
-val x: Int = calc square 2 toInt
+ChipShop
+
 
 object argh {
   def a = {

@@ -1,3 +1,6 @@
+
+https://www.manning.com/books/functional-programming-in-scala
+
 scala interpreter		scala
 scala compiler			scalac
 
@@ -6,32 +9,31 @@ expression				program text that can be evaluated/run by Scala,
 						exists at compile time,
 						evaluates to/has a value,
 						has a type (determined a compile time), 
-						identifier: type = value , eg. res0: String = HELLO WORLD!
 value					information stored in memory
 						exists at runtime
 						is an object
 type					an expression has a type, a value does not
 						exists at compile time, not at runtime	
+
+identifier: type = value , eg. res0: String = HELLO WORLD!
+
 statements				do not have a value / result ??? eg. println(<arg>)
 commands				:<command>
 :paste					enter multiple lines; paste contents of file to console 
-:type1					print type of expression, don't evaluate
-Unit					scala equivalent of void
+:type					print type of expression, don't evaluate
 
 Trait
-Object
-Class
 
 compile time			1. syntactically correct, 2. type checking
 runtime
 compile time and runtime errors
 
-type erasure			When a program type checks, Scala guarantees that all values are used consistently and thus it does not need to record type information in a value’s
+type erasure			When a program type checks, Scala guarantees that all values are used consistently and thus it does not need to record type information in a valueï¿½s
 						representation. This process of removing type information is called type erasure
 type system
-object					grouping a methods and fields
+
 Infix Operator Notation	Any Scala expression written a.b(c) can also be written a b c.
-literal expression		evaluates to a fixed value that stands “for itself”
+literal expression		evaluates to a fixed value that stands 'for itself'
 
 Types:
 Number					Int (42), Double (42.0), Float (42.0f), Long (42L)     (,Short, Byte)
@@ -39,15 +41,69 @@ Boolean					true, false
 Char					'a'
 String					"abc"
 Null 					null
-Unit					()
+Unit					scala equivalent of void, ()
+Any                     grand supertype of all Scala types
+Nothing                 throw-expressions
+Null, Nothing           These special types are subtypes of everything else
 
 declaration				kind of SCala program, binding names to values. 
 						Declarations are different to expressions. They do not evaluate to a value and do not have a type.
 fields					fields refer to values stored within an object
 methods					methods refer to computations that produce values
 
+val vs. var             immutable vs. mutable fields
 
+method for creating methods:
+1. Identify the Input and Output
+2. Prepare Test Cases
+3. Write the Declaration
+4. Run the Code
+5. Write the Body
+5.1 Consider the Result Type
+5.2 Consider the Input Type
+6. Run the Code, Again
 
+compound expressions:
+conditionals
+blocks                  The type and value of a block is that of the last expression in the block.
+
+expressions             evaluate to values
+declarations            give names to values
+
+object					grouping a methods and fields
+                        a value
+class                   template for an object
+                        allows us to create many objects with the same Type
+                        not a value
+                        binds a name to ...
+                        'lives' in a namespace
+
+substitution model
+
+Keyword Parameters      are robust to changes in the number and order of parameters
+method chaining         new Counter(10).inc.dec.inc.inc.count
+method overloading
+
+functions               objects representing computations
+types                   the way we properly abstract across values
+companion object        To define a companion object for a class, in the same file as the class, define an object with the same name.
+                        Companion objects replace Javaâ€™s static methods.
+Scala has two namespaces: the namespace of values and the namespace of types
+
+eq                      test for reference identity
+==, equals              test if  all fields are equal?
+
+case class
+
+Features of a case class:
+1. A field for each constructor argument
+2. A default toString method
+3. Sensible equals, and hashCode methods that operate on the field values in the object
+4. A copy method that creates a new object with the same field values as the current one
+
+Features of a case class companion object
+1. contains an apply method with the same arguments as the class constructor
+2. contains code to implement an extractor pattern for use in pattern matching
 
 
 
