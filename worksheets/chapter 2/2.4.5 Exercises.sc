@@ -1,12 +1,10 @@
 class Cat(val colour: String, val food: String) {}
-
 val oswald = new Cat(colour = "Black", food = "Milk")
 val henderson = new Cat("Ginger", "Chips")
 val quentin = new Cat("Tabby and white", "Curry")
 
 
 object ChipShop {
-
   def willServe(cat: Cat): Boolean =
     if (cat.food == "Chips")
       true

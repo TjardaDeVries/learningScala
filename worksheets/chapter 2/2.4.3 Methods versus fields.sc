@@ -3,13 +3,11 @@ object Test7 {
     println("Evaluating simpleField")
     42
   }
-
   def noParameterMethod = {
     println("Evaluating noParameterMethod")
     42
   }
 }
-
 
 Test7
 
@@ -28,7 +26,4 @@ def name: String = {
 }
 
 name
-
-
-
 

@@ -1,5 +1,3 @@
-
-
 class Timestamp(val seconds: Long)
 
 object Timestamp {

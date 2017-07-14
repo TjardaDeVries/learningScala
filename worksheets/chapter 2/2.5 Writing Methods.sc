@@ -1,9 +1,6 @@
-
-
 object calc {
 
   def square(x: Double): Double = x * x
-
   def cube(x: Double): Double = x * square(x)
 
   assert(square(2.0) == 4.0)
@@ -16,6 +13,7 @@ object calc {
 
 }
 
+// Overloading:
 
 object calc2 {
 

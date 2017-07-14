@@ -91,7 +91,7 @@ companion object        To define a companion object for a class, in the same fi
 Scala has two namespaces: the namespace of values and the namespace of types
 
 eq                      test for reference identity
-==, equals              test if  all fields are equal?
+==, equals              test if  all field values are equal?
 
 case class
 
@@ -104,6 +104,27 @@ Features of a case class:
 Features of a case class companion object
 1. contains an apply method with the same arguments as the class constructor
 2. contains code to implement an extractor pattern for use in pattern matching
+
+case object             use instead of case class with no constructor arguments
+                        defines a class and an object, and makes the object an instance (actually the only instance) of the class
+                        With a case object we still get all of the functionality defined for case classes
+
+
+pattern matching
+
+A pattern can be one of:
+1. a name, binding any value to that name;
+2. an underscore, matching any value and ignoring it;
+3. a literal, matching the value the literal denotes; or
+4. a constructor-style pattern for a case class.
+
+algebraic datatype      a description of data
+structural recursion    mechanically write code that transforms an algebraic datatype
+
+Traits                  are templates for creating classes, in the same way that classes are templates for creating objects
+                        traits allow us to express that multiple classes share a common super-type
+
+It is good practice to never define vals in a trait, but rather to use def.
 
 
 

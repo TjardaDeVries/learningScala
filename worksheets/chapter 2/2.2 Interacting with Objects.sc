@@ -1,12 +1,13 @@
 "Hello world!".toUpperCase
-2./(1)
+2. / (1)
 2 / 1
 
 // infix operator notation
 "the quick brown fox" split " "
+"the quick brown fox".split(" ")
 
 "foo" take 1
-1.+(2).+(3)
+1. + (2).+(3)
 
 object Test {}
 
@@ -31,5 +32,4 @@ object Test4 {
 }
 
 Test4 hello "Dave"
-
 
