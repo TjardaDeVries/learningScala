@@ -35,7 +35,8 @@ type system
 Infix Operator Notation	Any Scala expression written a.b(c) can also be written a b c.
 literal expression		evaluates to a fixed value that stands 'for itself'
 
-Types:
+TYPES:
+=====
 Number					Int (42), Double (42.0), Float (42.0f), Long (42L)     (,Short, Byte)
 Boolean					true, false
 Char					'a'
@@ -53,7 +54,8 @@ methods					methods refer to computations that produce values
 
 val vs. var             immutable vs. mutable fields
 
-method for creating methods:
+METHOD FOR CREATING METHODS
+===========================
 1. Identify the Input and Output
 2. Prepare Test Cases
 3. Write the Declaration
@@ -70,7 +72,7 @@ blocks                  The type and value of a block is that of the last expres
 expressions             evaluate to values
 declarations            give names to values
 
-object					grouping a methods and fields
+object					grouping of methods and fields
                         a value
 class                   template for an object
                         allows us to create many objects with the same Type
@@ -93,8 +95,8 @@ Scala has two namespaces: the namespace of values and the namespace of types
 eq                      test for reference identity
 ==, equals              test if  all field values are equal?
 
-case class
-
+CASE CLASSES
+============
 Features of a case class:
 1. A field for each constructor argument
 2. A default toString method
@@ -110,8 +112,8 @@ case object             use instead of case class with no constructor arguments
                         With a case object we still get all of the functionality defined for case classes
 
 
-pattern matching
-
+PATTERN MATCHING
+================
 A pattern can be one of:
 1. a name, binding any value to that name;
 2. an underscore, matching any value and ignoring it;
@@ -125,6 +127,22 @@ Traits                  are templates for creating classes, in the same way that
                         traits allow us to express that multiple classes share a common super-type
 
 It is good practice to never define vals in a trait, but rather to use def.
+
+Sealed trait            When we mark a trait as sealed we must define all of its subtypes in the same file.
+                        If all the subtypes of a trait are known, seal the trait
+                        Consider making subtypes final if there is no case for extending them
+                        Remember subtypes must be defined in the same file as a sealed trait.
+
+Pattern:
+
+sealed trait TraitName { ... }
+final case class Name(...) extends TraitName
+
+The main advantages of this pattern are:
+1. the compiler will warn if we miss a case in pattern matching; and
+2. we can control extension points of sealed traits and thus make stronger guarantees about the behaviour of subtypes.
+
+s"...... ${varname} ....."    String interpolation
 
 
 
