@@ -142,7 +142,124 @@ The main advantages of this pattern are:
 1. the compiler will warn if we miss a case in pattern matching; and
 2. we can control extension points of sealed traits and thus make stronger guarantees about the behaviour of subtypes.
 
-s"...... ${varname} ....."    String interpolation
+s"...... ${varname} ....."    is called 'string interpolation'
+
+
+ALGEBRAIC DATA TYPES
+====================
+algebraic data types    sum and product types,
+                        The sum and product type patterns tell us how to combine data to make bigger data
+Product Type Pattern    “A has a B and C”
+                        “has-a and”
+                        implememtations:
+                            case class A(b: B, c: C)
+                            trait A {def b: B; def c: C}
+Sum Type Pattern        "A is a B or C" (and nothing else!)
+                        "is-a or"
+(implememtation:
+
+sealed trait A
+final case class B() extends A
+final case class C() extends A
+
+)
+
+Algebraic Data Types    An algebraic data type is any data that uses the above two patterns.
+
+Patterns:               implementation
+1. is-a or              => sum type pattern
+2. is-a and             => trait that extends multiple other traits
+3. has-a or             => combination of sum and product type pattern
+4. has-a and            => product type pattern
+
+
+
+STRUCTURAL RECURSION
+====================
+structural recursion    pattern for using algebraic data types, 2 variants:
+                        polymorphism
+                        pattern matching
+
+Structural recursion says that if we have an A as defined before (case class A(b: B, c: C)),
+we must break it into its constituent B and C that we then combine in some way to get closer to our desired answer.
+
+Structural recursion is essentially the process of breaking down data into smaller pieces.
+
+Just as we have two patterns for building algebraic data types, we will have two patterns for decomposing them using
+structural recursion. We will actually have two variants of each pattern, one using polymorphism, which is the typical
+object-oriented style, and one using pattern matching, which is typical functional style.
+
+Polymorphism
+Polymorphic dispatch, or just polymorphism for short, is a fundamental object-oriented technique. If we define a
+method in a trait, and have different implementations in classes extending that trait, when we call that method the
+implementation on the actual concrete instance will be used
+
+
+STRUCTURAL RECURSION PATTERNS:
+
+1. POLYMORPHISM:
+
+
+1.1 The Product Type Polymorphism Pattern
+=========================================
+case class A(b: B, c: C) {
+  def f: F = ???
+}
+
+1.2 The Sum Type Polymorphism Pattern
+=====================================
+sealed trait A {
+  def f: F
+}
+final case class B() extends A {
+  def f: F =
+    ???
+}
+final case class C() extends A {
+  def f: F =
+    ???
+}
+
+
+2 PATTERN MATCHING:
+
+2.1 The Product Type Pattern Matching Pattern
+=============================================
+def f(a: A): F =
+  a match {
+    case A(b, c) => ???
+  }
+
+2.2 The Sum Type Pattern Matching Pattern
+=========================================
+def f(a: A): F =
+  a match {
+    case B() => ???
+    case C() => ???
+  }
+
+
+
+The general rule is: if a method only depends on other fields and methods in a class it is a good candidate to be
+implemented inside the class. If the method depends on other data (for example, if we needed a Cook to make dinner)
+consider implementing is using pattern matching outside of the classes in question. If we want to have more than one
+implementation we should use pattern matching and implement it outside the classes.
+
+tail call       A tail call is a method call where the caller immediately returns the value
+
+def method1: Int =
+  1
+
+def tailCall: Int =
+  method1
+
+def notATailCall: Int =
+  method1 + 2
+
+
+
+
+
 
 
 
