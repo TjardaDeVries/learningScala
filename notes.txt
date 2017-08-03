@@ -177,8 +177,8 @@ Patterns:               implementation
 STRUCTURAL RECURSION
 ====================
 structural recursion    pattern for using algebraic data types, 2 variants:
-                        polymorphism
-                        pattern matching
+                        - polymorphism
+                        - pattern matching
 
 Structural recursion says that if we have an A as defined before (case class A(b: B, c: C)),
 we must break it into its constituent B and C that we then combine in some way to get closer to our desired answer.
@@ -197,9 +197,7 @@ implementation on the actual concrete instance will be used
 
 STRUCTURAL RECURSION PATTERNS:
 
-1. POLYMORPHISM:
-
-
+1. POLYMORPHISM (OO-style):
 1.1 The Product Type Polymorphism Pattern
 =========================================
 case class A(b: B, c: C) {
@@ -220,9 +218,7 @@ final case class C() extends A {
     ???
 }
 
-
-2 PATTERN MATCHING:
-
+2 PATTERN MATCHING (FP-style):
 2.1 The Product Type Pattern Matching Pattern
 =============================================
 def f(a: A): F =
@@ -238,14 +234,12 @@ def f(a: A): F =
     case C() => ???
   }
 
-
-
 The general rule is: if a method only depends on other fields and methods in a class it is a good candidate to be
 implemented inside the class. If the method depends on other data (for example, if we needed a Cook to make dinner)
-consider implementing is using pattern matching outside of the classes in question. If we want to have more than one
+consider implementing it using pattern matching outside of the classes in question. If we want to have more than one
 implementation we should use pattern matching and implement it outside the classes.
 
-tail call       A tail call is a method call where the caller immediately returns the value
+tail call       A tail call is a method call where the callee immediately returns the value
 
 def method1: Int =
   1
@@ -256,7 +250,30 @@ def tailCall: Int =
 def notATailCall: Int =
   method1 + 2
 
+GENERICS AND FUNCTIONS
+======================
+generics    : abstract over types
+functions   : abstract over methods ==> reduce duplication of code
 
+type parameter      : A in the following code is called the type parameter
+
+sealed trait Result[A]
+case class Success[A](result: A) extends Result[A]
+case class Failure[A](reason: String) extends Result[A]
+
+Type Parameter Syntax
+=====================
+case class Name[A](...){ ... }
+trait Name[A]{ ... }
+def name[A](...){ ... }
+
+Invariant Generic Sum Type Pattern
+==================================
+If A of type T is a B or C write
+
+sealed trait A[T]
+final case class B[T]() extends A[T]
+final case class C[T]() extends A[T]
 
 
 
