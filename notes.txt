@@ -256,7 +256,7 @@ GENERICS AND FUNCTIONS
 generics    : abstract over types
 functions   : abstract over methods ==> reduce duplication of code
               unlike methods, a function is a value
-              just like a value, a function has a type,syntax: (A, B, ...) => C
+              just like a value, a function has a type, syntax: (A, B, ...) => C
 
 type parameter      : A in the following code is called the type parameter
 
@@ -285,7 +285,16 @@ Function literals           eg: (x: Int) => x + 1
                             also called anonymous functions
 
 The pattern matching implementations benefited from fold as we remove the duplication in the pattern matching.
-In general fold makes a good interface for users outside the class, but not necessarily for use inside the class.
+In general a fold makes a good interface for users outside the class, but not necessarily for use inside the class.
+
+base case           : case that ends recursion
+
+Folds
+=====
+Fold is just an adaptation of structural recursion where we allow the user to pass in the functions we apply at
+each case. As structural recursion is the generic pattern for writing any function that transforms an algebraic
+datatype, fold is the concrete realisation of this generic pattern. That is, fold is the generic transformation
+or iteration method. Any function you care to write on an algebraic datatype can be written in terms of fold.
 
 Fold Pattern
 ============
@@ -304,11 +313,87 @@ convert method calls to functions   : simply follow a method with an underscore,
 Multiple Parameter Lists            : def example(x: Int)(y: Int) = x + y
                                       example(1)(2) // res: Int = 3
 
+GENERIC IMPLEMENTATION OF PRODUCT TYPE
+======================================
+Pairs
+Tuples      : Tuple1[A] through to Tuple22[A, B, C, ...]
+              sugared form: (A, B, C, ...)
+              fields are called _1, _2, _3, etc
+
+GENERIC IMPLEMENTATION OF SUM TYPE
+==================================
+sealed trait Sum[A,B]
+final case class Left[A,B](value: A) extends Sum[A,B]
+final case class Right[A,B](value: B) extends Sum[A,B]
+
+Scala API: Either
+
+GENERIC OPTIONAL VALUES
+=======================
+sealed trait Maybe[A]
+final case class Full[A](value: A) extends Maybe[A]
+final case class Empty[A]() extends Maybe[A]
+
+Scala API: Option
+
+Many expressions may sometimes produce a value and sometimes not.
+If we can encode an optional value in the type system, the compiler will force us to consider the case where a
+value is not available, thus increasing the robustness of our code.
 
 
+Map
+===
+Examples:
+We have a List[Int] and a function Int => User, and we want to get a List[User]
+we have a Maybe[User] and a function User => Order, and we want a Maybe[Order].
+We have a Sum[String, Order] and a function Order => Double, and we want Sum[String, Double]
 
+What these all have in common is we have a type F[A] and a function A => B, and we want a result F[B].
+The method that performs this operation is called map.
 
+sealed trait LinkedList[A] {
+  def map[B](fn: A => B): LinkedList[B] =
+    this match {
+      case Pair(hd, tl) => Pair(fn(hd), tl.map(fn))
+      case End() => End[B]()
+    }
+}
 
+FlatMap
+=======
+Examples:
+We have LinkedList[User] and a function User => LinkedList[Order], and we want LinkedList[Order].
+we have Maybe[User] and User => Maybe[Order], and we want Maybe[Order].
+We have Sum[String, Order] and a function Order => Sum[String, Id], and we want Sum[String, Id].
 
+What these all have in common is we have a type F[A] and a function A => F[B], and we want a result F[B].
+The method that performs this operation is called flatMap.
 
+sealed trait Maybe[A] {
+  def flatMap[B](fn: A => Maybe[B]): Maybe[B] =
+    this match {
+      case Full(v) => fn(v)
+      case Empty() => Empty[B]()
+    }
+}
+final case class Full[A](value: A) extends Maybe[A]
+final case class Empty[A]() extends Maybe[A]
+
+Functors and Monads
+===================
+A type like F[A] with a map method is called a functor.
+If a functor also has a flatMap method it is called a monad.
+
+There is a little bit more to being a functor or monad. For a monad we require a constructor, typically
+called point, and there are some algebraic laws that our map and flatMap operations must obey.
+
+The general idea is a monad represents a value in some context. The context depends on the monad we’re using.
+We’ve seen examples where the context is:
+
+an optional value, such as we might get when retrieving a value from a database;
+an sum of values, which might represent a error message and a value we’re computing with; and
+a list of values.
+
+We use map when we want to transform the value within the context to a new value, while keeping the context the same.
+We use flatMap when we want to transform the value and provide a new context.
 
