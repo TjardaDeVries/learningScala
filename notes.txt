@@ -320,16 +320,16 @@ Tuples      : Tuple1[A] through to Tuple22[A, B, C, ...]
               sugared form: (A, B, C, ...)
               fields are called _1, _2, _3, etc
 
-GENERIC IMPLEMENTATION OF SUM TYPE
-==================================
+SUM, GENERIC IMPLEMENTATION OF SUM TYPE
+=======================================
 sealed trait Sum[A,B]
 final case class Left[A,B](value: A) extends Sum[A,B]
 final case class Right[A,B](value: B) extends Sum[A,B]
 
 Scala API: Either
 
-GENERIC OPTIONAL VALUES
-=======================
+OPTIONS / GENERIC OPTIONAL VALUES
+=================================
 sealed trait Maybe[A]
 final case class Full[A](value: A) extends Maybe[A]
 final case class Empty[A]() extends Maybe[A]

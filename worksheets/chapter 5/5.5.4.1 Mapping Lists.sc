@@ -15,9 +15,10 @@ sealed trait LinkedList[A] {
     }
   def flatMap[B](fn: A => LinkedList[B]):LinkedList[B] =
     this match {
-      case Pair(hd,tl) => fn(hd) tl.flatMap(fn) ???
+      case Pair(hd,tl) => concat(fn(hd), tl.flatMap(fn))
       case End() => End[B]()
     }
+  def concat(list1: LinkedList[A], list2: LinkedList[A]): LinkedList[A] = ???
 }
 final case class Pair[A](head: A, tail: LinkedList[A]) extends LinkedList[A]
 final case class End[A]() extends LinkedList[A]
