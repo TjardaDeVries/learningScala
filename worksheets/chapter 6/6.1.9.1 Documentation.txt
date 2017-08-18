@@ -1,0 +1,12 @@
+There is a synonym of length defined on Seq—what is it called?
+size
+
+There are two methods for retrieving the first item in a List – what are they called and how do they differ?
+head which returns an A
+headOption which returns an Option[A]
+
+What method can be used used to display the elements of the sequence as a string?
+mkString
+
+What method of Option can be used to determine whether the option contains a value?
+isEmpty

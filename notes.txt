@@ -480,6 +480,8 @@ SEQUENCES
 val sequence = Seq(1, 2, 3)
 // sequence: Seq[Int] = List(1, 2, 3)
 
+The default sequences in Scala are immutable!
+
 RULE: Any method ending with a : character becomes right associative when written as an infix operator.
 
 In programming languages, the associativity of an operator is a property that determines how
@@ -487,5 +489,92 @@ operators of the same precedence are grouped in the absence of parentheses.
 Consider the expression a ~ b ~ c.
 If the operator ~ has left associativity, this expression would be interpreted as (a ~ b) ~ c.
 If the operator has right associativity, the expression would be interpreted as a ~ (b ~ c)
+
+Import statements:
+=================
+// `empty` is unbound here
+
+def someMethod = {
+  import scala.collection.immutable.Vector.empty
+
+  // `empty` is bound to `Vector.empty` here
+  empty[Int]
+}
+
+// `empty` is unbound again here
+
+Iterable
+========
+"dog".permutations
+// res: Iterator[String] = non-empty iterator
+scala> "dog".permutations.toList
+res3: List[String] = List(dog, dgo, odg, ogd, gdo, god)
+
+Return types when using flatMap:
+===============================
+Seq(1, 2, 3).flatMap(num => Seq(num, num * 10))
+// res: List[Int] = List(1, 10, 2, 20, 3, 30)
+import scala.collection.immutable.Vector
+Vector(1, 2, 3).flatMap(num => Seq(num, num * 10))
+// res: scala.collection.immutable.Vector[Int] = Vector(1, 10, 2, 20, 3, 30)
+
+
+TRAVERSAL FUNCTIONS: map, flatMap, fold, foreach
+================================================
+
+Algebra of Transformations
+==========================
+Method	        We have	    We provide	        We get
+
+foreach         Seq[A]      A => Unit           Unit
+map             Seq[A]      A => B              Seq[B]
+flatMap         Seq[A]      A => Seq[B]         Seq[B]
+foldLeft        Seq[A]      B and (B, A) => B   B
+foldRight       Seq[A]      B and (A, B) => B   B
+
+examples:
+Seq(1, 2, 3).foldLeft(0)(_ + _)         (((0 + 1) + 2) + 3)
+Seq(1, 2, 3).foldRight(0)(_ + _)        (1 + (2 + (3 + 0)))
+List(1, 2, 3).foreach(num => println("And a " + num + "..."))
+
+Your two steps in solving any problem with sequences should be:
+1. think about the types, and
+2. experiment on the REPL!
+
+FOR COMPREHENSIONS
+==================
+Seq(1, 2, 3).map(_ * 2)
+is equivalent to
+for {
+  x <- Seq(1, 2, 3) // pattern <- generator expression
+} yield x * 2
+
+
+for {
+  x <- a
+  y <- b
+  z <- c
+} yield e
+translates to:
+
+a.flatMap(x => b.flatMap(y => c.map(z => e)))
+
+The intuitive understanding of the code is to iterate through all of the sequences in the generators, mapping
+the yield expression over every element therein, and accumulating a result of the same type as sequence fed into
+the FIRST generator.
+
+for (
+  x <- a;
+  y <- b;
+  z <- c;
+) yield e
+
+is equivalent to
+
+for {
+  x <- a
+  y <- b
+  z <- c
+} yield e
 
 

@@ -43,11 +43,11 @@ sealed trait Expression {
     }
 
   def lift2(l: Expression, r: Expression, f: (Double, Double) => Sum[String, Double]) =
-    l.eval flatMap { left =>
-      r.eval flatMap { right =>
-        f(left, right)
-      }
-    }
+    (l.eval) // : Sum[String,Double]
+      .flatMap({ left => (r.eval)
+      .flatMap({ right => f(left, right)})
+    })
+  // the argument of the calls to flatMap is a function: Double => Sum[String, Double]
 }
 
 final case class Addition(left: Expression, right: Expression) extends Expression

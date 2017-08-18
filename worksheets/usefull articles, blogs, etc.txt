@@ -1,0 +1,5 @@
+Map, flatMap, flatten:
+https://www.credera.com/blog/technology-insights/mastering-scala-understanding-map-and-flatmap/
+
+Monads, flatMap:
+https://medium.com/@sinisalouc/demystifying-the-monad-in-scala-cc716bb6f534
