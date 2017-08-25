@@ -617,8 +617,8 @@ for {
   b <- optionB
 } yield a + b
 
-MONADS
-======
+MONAD
+=====
 Option is a monad that allows us to sequence computations on optional values without worrying about the fact
 that they may or may not be present;
 
@@ -628,13 +628,162 @@ about the fact that there are lots of possible combinations involved;
 Future is another popular monad that allows us to sequence asynchronous computations without worrying
 about the fact that they are asynchronous.
 
-MAPS
-====
+MAP
+===
 A Map is very much like its counterpart in Java - it is a collection that maps keys to values.
 The keys must form a set and in most cases are unordered.
 
-SETS
-====
+SET
+===
 Sets are unordered collections that contain no duplicate elements.
 You can think of them as sequences without an order, or maps with keys and no values.
+
+RANGE
+=====
+10 until 1 by -1
+
+TYPE CLASSES
+============
+Type classes are a powerful feature of Scala that allow us to extend existing libraries with new functionality,
+without using inheritance and without having access to the original library source code.
+
+With type classes we can:
+
+* plug in different implementations of an interface for a given class; and
+* implement an interface without modifying existing code.
+
+Example:
+val minOrdering = Ordering.fromLessThan[Int](_ < _)
+List(3, 4, 2).sorted(minOrdering)
+
+The type class pattern separates the implementation of functionality (the type class instance, an Ordering[A]
+in our example) from the type the functionality is provided for (the A in an Ordering[A]).
+This is the basic pattern for type classes.
+
+IMPLICITS
+=========
+It can be inconvenient to continually pass the type class instance to a method when we want to repeatedly use the
+same instance. Scala provides a convenience, called an implicit value, that allows us to get the compiler to pass
+the type class instance for us.
+
+Example:
+implicit val ordering = Ordering.fromLessThan[Int](_ < _)
+List(2, 4, 3).sorted
+
+Implicit values:
+We can tag any val, var, object or zero-argument def with the implicit keyword,
+making it a potential candidate for an implicit parameter.
+An implicit value must be declared within a surrounding object, class, or trait.
+
+Summary (so far):
+In Scala, a type class is just a trait. To use a type class we:
+
+* create implementations of that trait, called type class instances; and
+* typically we mark the type class instances as implicit values.
+
+Marking values as implicit tells the compiler it can supply them as a parameter to a method call if none is
+explicitly given. For the compiler to supply a value:
+
+1. the parameter must be marked implicit in the method declaration;
+2. there must be an implicit value available of the same type as the parameter; and
+3. there must be only one such implicit value available.
+
+Type Class Instance Packaging: Companion Objects
+------------------------------------------------
+I) When defining a type class instance, if
+
+*) there is a single instance for the type; and
+*) you can edit the code for the type that you are defining the instance for
+
+then define the type class instance in the companion object of the type.
+
+II) When defining a type class instance, if
+
+1. there is a single good default instance for the type; and
+2. you can edit the code for the type that you are defining the instance for
+
+then define the type class instance in the companion object of the type. This allows users to override the instance
+by defining one in the LOCAL scope whilst still providing sensible default behaviour.
+
+---
+When packaging type class instances, if there is a single instance or a single good default we should put it in the
+companion object if possible. Otherwise, one way to package implicits is to place each one in an object and require
+the user to explicitly import them.
+
+TYPE CLASS PATTERN
+==================
+A type class is a trait with at least one type variable. The type variables specify the concrete types the type class
+instances are defined for. Methods in the trait usually use the type variables.
+
+trait ExampleTypeClass[A] {
+  def doSomething(in: A): Foo
+}
+
+We have seen the basic pattern for implementing type classes.
+1. We declare some interface for the functionality we want
+2. We write type class instances for each concrete class we want to use and for each different situation we want to
+   use it in.
+
+Example:
+
+trait HtmlWriter[A] {
+  def write(in: A): String
+}
+
+object PersonWriter extends HtmlWriter[Person] {
+  def write(person: Person) = s"<span>${person.name} &lt;${person.email}&gt;</span>"
+}
+
+IMPLICIT PARAMETER LISTS
+========================
+def method[A](normalParam1: NormalType, ...)(implicit implicitParam1: ImplicitType[A], ...)
+
+Example:
+
+object HtmlUtil {
+  def htmlify[A](data: A)(implicit writer: HtmlWriter[A]): String = {
+    writer.write(data)
+  }
+}
+
+If we call a method and do not explicitly supply an explicit parameter, the compiler will search for an
+implicit value of the correct type and insert it as the parameter.
+
+INTERFACES USING IMPLICIT PARAMETERS
+====================================
+
+Option 1
+--------
+object HtmlWriter {
+  def write[A](in: A)(implicit writer: HtmlWriter[A]): String =
+    writer.write(in)
+}
+
+Option 2
+--------
+The idea is to simply select a type class instance by type (done by the no-argument apply method) and then directly
+call the methods defined on that instance.
+
+object HtmlWriter {
+  def apply[A](implicit writer: HtmlWriter[A]): HtmlWriter[A] =
+    writer
+}
+
+Use, example:
+
+HtmlWriter[Person].write(Person("Noel", "noel@example.org"))
+
+
+TYPE CLASS INTERFACE PATTERN
+============================
+If the desired interface to a type class TypeClass is exactly the methods defined on the type class trait,
+define an interface on the companion object using a no-argument apply method like
+
+object TypeClass {
+  def apply[A](implicit instance: TypeClass[A]): TypeClass[A] =
+    instance
+}
+
+
+
 
