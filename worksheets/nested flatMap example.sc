@@ -11,4 +11,6 @@ val perms = chars flatMap { a =>
 
 
 val data = Seq(Seq(1), Seq(2, 3), Seq(4, 5, 6))
+data.map(_.map(_ * 2))
 data.flatMap(_.map(_ * 2))
+

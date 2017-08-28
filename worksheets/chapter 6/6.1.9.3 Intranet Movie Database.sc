@@ -46,7 +46,17 @@ def g(year: Int) = directors.find(_.yearOfBirth < year)
 
 def h(year: Int, numberOfFilms: Int) =  directors
   .filter(_.yearOfBirth < year)
-  .filter(_.films.size >= numberOfFilms)
+  .filter(_.films.size > numberOfFilms)
+
+h(1980, 4)
+
+def directorBornBeforeWithBackCatalogOfSize(year: Int, numberOfFilms: Int): Seq[Director] = {
+  val byAge   = directors.filter(_.yearOfBirth < year)
+  val byFilms = directors.filter(_.films.length > numberOfFilms)
+  byAge.filter(byFilms.contains)
+}
+
+directorBornBeforeWithBackCatalogOfSize(1980,4)
 
 def i(ascending: Boolean = true) =
   directors.sortWith { (a, b) =>

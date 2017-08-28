@@ -543,6 +543,8 @@ Your two steps in solving any problem with sequences should be:
 
 FOR COMPREHENSIONS
 ==================
+A for comprehension is just another representation for NESTED FLATMAP calls!!
+
 Seq(1, 2, 3).map(_ * 2)
 is equivalent to
 for {

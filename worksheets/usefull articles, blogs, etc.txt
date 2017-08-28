@@ -3,3 +3,5 @@ https://www.credera.com/blog/technology-insights/mastering-scala-understanding-m
 
 Monads, flatMap:
 https://medium.com/@sinisalouc/demystifying-the-monad-in-scala-cc716bb6f534
+
+http://danielwestheide.com/scala/neophytes.html
