@@ -473,7 +473,9 @@ case class WebAnalytics[A <: Visitor](
   isOrganic: Boolean
 )
 
-
+In other words:
+*) [B >: A] is a lower type bound. It means that B is constrained to be a supertype of A.
+*) Similarly [B <: A] is an upper type bound, meaning that B is constrained to be a subtype of A.
 
 SEQUENCES
 =========
