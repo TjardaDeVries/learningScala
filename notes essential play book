@@ -9,7 +9,7 @@ FUNDAMENTAL CONCEPTS
 ====================
 Actions         Actions are functions from Requests to Results
 Controllers     Controllers are collections of action-producing methods
-Routes          Routes map incoming Requests to Action-producing method calls on our Controllers.
+Routes          Routes map incoming Requests/URI patterns to Action-producing method calls on our Controllers.
 Requests
 Results
 
@@ -35,6 +35,97 @@ GET /      controllers.HelloController.hello
 GET /:name controllers.HelloController.helloTo(name: String)
 
 Note that Actions and Controllers have different lifetimes. Controllers are created when our application boots and persist until it shuts down. Actions are created and executed in response to incoming Requests and have a much shorter lifespan. Play passes parameters from our routes to the method that creates the Action, not to the action itself.
+
+ROUTES
+======
+Path parameters
+---------------
+GET /hello/:name            controllers.HelloController.helloTo(name: String)
+GET /send/:msg/to/:user     controllers.ChatController.send(msg: String, user: String)
+GET /download/*filename     controllers.DownloadController.file(filename: String)
+
+Single-segment (or: path-segment) parameters (:par_name) match any continuous set of characters excluding forward slashes (‘/’)
+Rest-style parameters (*par_name) match all remaining characters in the URI, including forward slashes.
+
+Query parameters
+----------------
+# Extract `username` and `message` from the path:
+GET /send/:message/to/:username         controllers.ChatController.send(message: String, username: String)
+# Extract `username` and `message` from the query string:
+GET /send                               controllers.ChatController.send(message: String, username: String)
+# Extract `username` from the path and `message` from the query string:
+GET /send/to/:username                  controllers.ChatController.send(message: String, username: String)
+
+Optional parameters
+-------------------
+We sometimes want to make query string parameters optional. To do this, we just have to define them as Option types. Play will pass Some(value) if the URI contains the parameter and None if it does not.
+
+Typed Parameters
+----------------
+GET /say/:msg/:n/times controllers.VerboseController.say(msg: String, n: Int)
+Play has built-in support for Int, Double, Long, Boolean, and UUID parameters.
+Play also has built-in support for Option and List parameters in the query string (but not in the path)
+
+Examples:
+/option-example             # => MyController.optionExample(None)
+/option-example?arg=123     # => MyController.optionExample(Some(123))
+/list-example               # => MyController.listExample(Nil)
+/list-example?arg=123       # => MyController.listExample(List(123))
+/list-example?arg=12&arg=34 # => MyController.listExample(List(12, 34))
+
+Reverse Routing
+---------------
+Reverse routes are objects that we can use to generate URIs. Play generates reverse routes for us and places them in a controllers.routes package that we can access from our Scala code.
+
+import play.api.mvc.Call
+
+val methodAndUri: Call =
+  controllers.routes.HelloController.helloTo("dave")
+
+methodAndUri.method // "GET"
+methodAndUrl.url    // "/hello/dave"
+
+PARSING REQUESTS
+================
+
+Request bodies
+--------------
+def exampleAction = Action { request =>
+  request.body.asXml match {
+    case Some(xml) => // Handle XML
+    case None      => BadRequest("That's no XML!")
+  }
+}
+
+Headers and Cookies
+-------------------
+object RequestDemo extends Controller {
+  def headers = Action { request =>
+    val headers: Headers = request.headers
+    val ucType: Option[String] = headers.get("Content-Type")
+    val lcType: Option[String] = headers.get("content-type")
+
+    val cookies: Cookies = request.cookies
+    val cookie: Option[Cookie] = cookies.get("DemoCookie")
+    val value: Option[String] = cookie.map(_.value)
+
+    ...
+  }
+}
+
+Methods and URIs
+----------------
+// The HTTP method ("GET", "POST", etc):
+val method: String = request.method
+
+// The URI, including path and query string:
+val uri: String = request.uri
+
+// The path of the URI, without the query string:
+val path: String = request.path
+
+// The query string, split into name/value pairs:
+val query: Map[String, Seq[String]] = request.queryString
 
 
 
