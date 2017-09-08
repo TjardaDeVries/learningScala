@@ -1,4 +1,9 @@
-
+Vanilla SBT vs Play SBT
+=======================
+Play is distributed in two components:
+* a set of libraries used by our web applications at runtime;
+* an SBT plugin that customises the default behaviour of SBT, adding and altering commands to help us build applications for the web.
+This section covers the behaviour of SBT with the Play plugin activated.
 
 FUNDAMENTAL CONCEPTS
 ====================
@@ -30,3 +35,6 @@ GET /      controllers.HelloController.hello
 GET /:name controllers.HelloController.helloTo(name: String)
 
 Note that Actions and Controllers have different lifetimes. Controllers are created when our application boots and persist until it shuts down. Actions are created and executed in response to incoming Requests and have a much shorter lifespan. Play passes parameters from our routes to the method that creates the Action, not to the action itself.
+
+
+

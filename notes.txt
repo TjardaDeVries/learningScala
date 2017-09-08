@@ -4,39 +4,59 @@ https://www.manning.com/books/functional-programming-in-scala
 scala interpreter		scala
 scala compiler			scalac
 
-expression				program text that can be evaluated/run by Scala,
+GLOSSARY, BASICS
+================
+Expression				program text that can be evaluated/run by Scala,
 						main component of a Scala program,
 						exists at compile time,
 						evaluates to/has a value,
 						has a type (determined a compile time), 
-value					information stored in memory
-						exists at runtime
-						is an object
-type					an expression has a type, a value does not
-						exists at compile time, not at runtime
-						abstracts over values (eg. 1, 2, 3 are Ints)
-
-identifier: type = value , eg. res0: String = HELLO WORLD!
-
-statements				do not have a value / result ??? eg. println(<arg>)
-commands				:<command>
-:paste					enter multiple lines; paste contents of file to console 
-:type					print type of expression, don't evaluate
-
-Trait
-
-compile time			1. syntactically correct, 2. type checking
-runtime
-compile time and runtime errors
-
-type erasure			When a program type checks, Scala guarantees that all values are used consistently and thus it does not need to record type information in a value�s
-						representation. This process of removing type information is called type erasure
-type system
-
+Value					Information stored in memory
+						Exists at runtime
+						Is an object
+Type					An expression has a type, a value does not(!)
+						Exists at compile time, not at runtime.
+						Abstracts over values (eg. 1, 2, 3 are Ints).
+Statements				Do not have a value/result, eg. println(<arg>).
+REPL commands			:<command>
+                        :paste - enter multiple lines; paste contents of file to console
+                        :type - print type of expression, don't evaluate
+REPL response           identifier: type = value , eg. res0: String = HELLO WORLD!
+Compile time checks		1. syntactically correct, 2. type checking
+Type erasure			When a program type checks, Scala guarantees that all values are used consistently and thus it
+                        does not need to record type information in a value's representation. This process of removing
+                        type information is called 'type erasure'.
 Infix Operator Notation	Any Scala expression written a.b(c) can also be written a b c.
-literal expression		evaluates to a fixed value that stands 'for itself'
+Literal expression		Evaluates to a fixed value that stands 'for itself'.
+Declarations			Give names to values.
+						Declarations are different to expressions. They do not evaluate to a value and do not have a type.
+Fields					Fields refer to values stored within an object.
+Methods					Methods refer to computations that produce values.
+val vs. var             Immutable vs. mutable fields.
+Object					Grouping of methods and fields
+                        A value
+Class                   Template for an object
+                        Allows us to create many objects with the same Type
+                        Not a value
+                        Binds a name to ...
+                        'Lives' in a namespace
+Substitution model      Linked to the concept of 'Referential Transparency'
+                        ...
+Keyword Parameters      are robust to changes in the number and order of parameters
+Method chaining         new Counter(10).inc.dec.inc.inc.count
+Method overloading
+Functions               Objects representing computations.
+Companion object        To define a companion object for a class, in the same file as the class, define an object with
+                        the same name. Companion objects replace Java’s static methods.
+Namespaces              Scala has two namespaces: the namespace of values and the namespace of types
+eq                      test for reference identity
+==, equals              test if  all field values are equal?
+Compound expressions    Conditionals and Blocks
+                        The type and value of a block is that of the last expression in the block.
+s"...${varname}..."     is called 'string interpolation'
 
-TYPES:
+
+TYPES
 =====
 Number					Int (42), Double (42.0), Float (42.0f), Long (42L)     (,Short, Byte)
 Boolean					true, false
@@ -48,56 +68,21 @@ Any                     grand supertype of all Scala types
 Nothing                 Nothing is a subtype of every other type, throw-expressions
 Null, Nothing           These special types are subtypes of everything else
 
-declaration				kind of SCala program, binding names to values. 
-						Declarations are different to expressions. They do not evaluate to a value and do not have a type.
-fields					fields refer to values stored within an object
-methods					methods refer to computations that produce values
-
-val vs. var             immutable vs. mutable fields
 
 METHOD FOR CREATING METHODS
 ===========================
 1. Identify the Input and Output
 2. Prepare Test Cases
-3. Write the Declaration
+3. Write the Declaration/Signature
 4. Run the Code
 5. Write the Body
 5.1 Consider the Result Type
 5.2 Consider the Input Type
 6. Run the Code, Again
 
-compound expressions:
-conditionals
-blocks                  The type and value of a block is that of the last expression in the block.
 
-expressions             evaluate to values
-declarations            give names to values
-
-object					grouping of methods and fields
-                        a value
-class                   template for an object
-                        allows us to create many objects with the same Type
-                        not a value
-                        binds a name to ...
-                        'lives' in a namespace
-
-substitution model
-
-Keyword Parameters      are robust to changes in the number and order of parameters
-method chaining         new Counter(10).inc.dec.inc.inc.count
-method overloading
-
-functions               objects representing computations
-types                   the way we properly abstract across values
-companion object        To define a companion object for a class, in the same file as the class, define an object with the same name.
-                        Companion objects replace Java’s static methods.
-Scala has two namespaces: the namespace of values and the namespace of types
-
-eq                      test for reference identity
-==, equals              test if  all field values are equal?
-
-CASE CLASSES
-============
+CASE CLASSES & OBJECTS
+======================
 Features of a case class:
 1. A field for each constructor argument
 2. A default toString method
@@ -108,63 +93,63 @@ Features of a case class companion object
 1. contains an apply method with the same arguments as the class constructor
 2. contains code to implement an extractor pattern for use in pattern matching
 
-case object             use instead of case class with no constructor arguments
-                        defines a class and an object, and makes the object an instance (actually the only instance) of the class
-                        With a case object we still get all of the functionality defined for case classes
+CASE OBJECT:
+*) Use instead of case class with no constructor arguments
+*) Defines a class and an object, and makes the object an instance (actually the only instance) of the class
+*) With a case object we still get all of the functionality defined for case classes
 
 
 PATTERN MATCHING
 ================
+Patterns                Patterns serve as tests that match a specific set of Scala values.
+
 A pattern can be one of:
-1. a name, binding any value to that name;
-2. an underscore, matching any value and ignoring it;
-3. a literal, matching the value the literal denotes; or
-4. a constructor-style pattern for a case class.
 
-algebraic datatype      a description of data
-structural recursion    mechanically write code that transforms an algebraic datatype
+1. A name, binding any value to that name;
+2. An underscore, matching any value and ignoring it;
+3. A literal, matching the value the literal denotes; or
+4. A constructor-style pattern for a case class.
+5. a: B - matches any value of type B and binds it to a variable a
 
-Traits                  are templates for creating classes, in the same way that classes are templates for creating objects
-                        traits allow us to express that multiple classes share a common super-type
 
-It is good practice to never define vals in a trait, but rather to use def.
+(SEALED) TRAITS
+===============
+Traits                  Are templates for creating classes, in the same way that classes are templates for
+                        creating objects.
+                        Traits allow us to express that multiple classes share a common super-type.
+Sealed trait            When we mark a trait as 'sealed' we must define all of its subtypes in the same file.
+                        If all the subtypes of a trait are known, seal the trait.
+                        Consider making subtypes final if there is no case for extending them.
+                        Remember: subtypes must be defined in the same file as a sealed trait.
 
-Sealed trait            When we mark a trait as sealed we must define all of its subtypes in the same file.
-                        If all the subtypes of a trait are known, seal the trait
-                        Consider making subtypes final if there is no case for extending them
-                        Remember subtypes must be defined in the same file as a sealed trait.
-
-Pattern:
-
+SEALED TRAIT PATTERN
+--------------------
 sealed trait TraitName { ... }
 final case class Name(...) extends TraitName
 
-The main advantages of this pattern are:
-1. the compiler will warn if we miss a case in pattern matching; and
-2. we can control extension points of sealed traits and thus make stronger guarantees about the behaviour of subtypes.
+PRACTICE: It is good practice to never define vals in a trait, but rather to use def.
 
-s"...... ${varname} ....."    is called 'string interpolation'
+The main advantages of this pattern are:
+1. The compiler will warn if we miss a case in pattern matching; and
+2. We can control extension points of sealed traits and thus make stronger guarantees about the behaviour of subtypes.
 
 
 ALGEBRAIC DATA TYPES
 ====================
-algebraic data types    sum and product types,
+Algebraic datatype      A description of data.
+Algebraic Data Types    Sum and product types
                         The sum and product type patterns tell us how to combine data to make bigger data
-Product Type Pattern    “A has a B and C”
-                        “has-a and”
-                        implememtations:
-                            case class A(b: B, c: C)
-                            trait A {def b: B; def c: C}
+Product Type Pattern    "A has a B and C"
+                        "has-a and"
+                        Implememtations:
+                        1. case class A(b: B, c: C)
+                        2. trait A {def b: B; def c: C}
 Sum Type Pattern        "A is a B or C" (and nothing else!)
                         "is-a or"
-(implememtation:
-
-sealed trait A
-final case class B() extends A
-final case class C() extends A
-
-)
-
+                        Implememtation:
+                        sealed trait A
+                        final case class B() extends A
+                        final case class C() extends A
 Algebraic Data Types    An algebraic data type is any data that uses the above two patterns.
 
 Patterns:               implementation
@@ -174,95 +159,81 @@ Patterns:               implementation
 4. has-a and            => product type pattern
 
 
-
 STRUCTURAL RECURSION
 ====================
-structural recursion    pattern for using algebraic data types, 2 variants:
+Structural Recursion    Mechanically write code that transforms an algebraic datatype
+                        Pattern for using algebraic data types, 2 variants:
                         - polymorphism
                         - pattern matching
 
-Structural recursion says that if we have an A as defined before (case class A(b: B, c: C)),
-we must break it into its constituent B and C that we then combine in some way to get closer to our desired answer.
+Structural recursion says that if we have an A as defined before (case class A(b: B, c: C)), we must break it into its constituent B and C that we then combine in some way to get closer to our desired answer.
 
 Structural recursion is essentially the process of breaking down data into smaller pieces.
 
-Just as we have two patterns for building algebraic data types, we will have two patterns for decomposing them using
-structural recursion. We will actually have two variants of each pattern, one using polymorphism, which is the typical
-object-oriented style, and one using pattern matching, which is typical functional style.
+Just as we have two patterns for building algebraic data types, we will have two patterns for decomposing them using structural recursion. We will actually have two variants of each pattern, one using polymorphism, which is the typical object-oriented style, and one using pattern matching, which is typical functional style.
 
 Polymorphism
-Polymorphic dispatch, or just polymorphism for short, is a fundamental object-oriented technique. If we define a
-method in a trait, and have different implementations in classes extending that trait, when we call that method the
-implementation on the actual concrete instance will be used
+Polymorphic dispatch, or just polymorphism for short, is a fundamental object-oriented technique. If we define a method in a trait, and have different implementations in classes extending that trait, when we call that method the implementation on the actual concrete instance will be used.
 
 
-STRUCTURAL RECURSION PATTERNS:
+STRUCTURAL RECURSION PATTERNS
+=============================
 
 1. POLYMORPHISM (OO-style):
 1.1 The Product Type Polymorphism Pattern
-=========================================
+-----------------------------------------
 case class A(b: B, c: C) {
   def f: F = ???
 }
 
 1.2 The Sum Type Polymorphism Pattern
-=====================================
+-------------------------------------
 sealed trait A {
   def f: F
 }
 final case class B() extends A {
-  def f: F =
-    ???
+  def f: F = ???
 }
 final case class C() extends A {
-  def f: F =
-    ???
+  def f: F = ???
 }
 
 2 PATTERN MATCHING (FP-style):
 2.1 The Product Type Pattern Matching Pattern
-=============================================
+---------------------------------------------
 def f(a: A): F =
   a match {
     case A(b, c) => ???
   }
 
 2.2 The Sum Type Pattern Matching Pattern
-=========================================
+-----------------------------------------
 def f(a: A): F =
   a match {
     case B() => ???
     case C() => ???
   }
 
-The general rule is: if a method only depends on other fields and methods in a class it is a good candidate to be
-implemented inside the class. If the method depends on other data (for example, if we needed a Cook to make dinner)
-consider implementing it using pattern matching outside of the classes in question. If we want to have more than one
-implementation we should use pattern matching and implement it outside the classes.
+The general rule is: if a method only depends on other fields and methods in a class it is a good candidate to be implemented inside the class. If the method depends on other data consider implementing it using pattern matching outside of the classes in question. If we want to have more than one implementation we should use pattern matching and implement it outside the classes.
 
-tail call       A tail call is a method call where the *CALLER* immediately returns the value
+TAIL CALL
+=========
+A tail call is a method call where the *CALLER* immediately returns the value. Example:
 
-def method1: Int =
-  1
-
-def tailCall: Int =
-  method1
-
-def notATailCall: Int =
-  method1 + 2
+def method1: Int = 1
+def tailCall: Int = method1
+def notATailCall: Int = method1 + 2
 
 GENERICS AND FUNCTIONS
 ======================
-generics    : abstract over types
-functions   : abstract over methods ==> reduce duplication of code
-              unlike methods, a function is a value
-              just like a value, a function has a type, syntax: (A, B, ...) => C
-
-type parameter      : A in the following code is called the type parameter
-
-sealed trait Result[A]
-case class Success[A](result: A) extends Result[A]
-case class Failure[A](reason: String) extends Result[A]
+Generics            Abstract over types.
+Functions           Abstract over methods ==> reduce duplication of code.
+                    Unlike methods, a function is a value.
+                    Just like a value, a function has a type, syntax: (A, B, ...) => C
+Type parameter      'A' in the following code is called the 'type parameter':
+                    sealed trait Result[A]
+                    case class Success[A](result: A) extends Result[A]
+                    case class Failure[A](reason: String) extends Result[A]
 
 Type Parameter Syntax
 =====================
@@ -278,47 +249,42 @@ sealed trait A[T]
 final case class B[T]() extends A[T]
 final case class C[T]() extends A[T]
 
-Functions
+FUNCTIONS
 =========
-Function literals           eg: (x: Int) => x + 1
-                            (parameter: type, ...) => expression
-                            also called anonymous functions
+Function literals   Eg: (x: Int) => x + 1
+                    (parameter: type, ...) => expression
+                    Also called 'anonymous functions'
+Base case           Case that ends recursion.
 
-The pattern matching implementations benefited from fold as we remove the duplication in the pattern matching.
-In general a fold makes a good interface for users outside the class, but not necessarily for use inside the class.
+The pattern matching implementations benefited from fold as we remove the duplication in the pattern matching. In general a fold makes a good interface for users outside the class, but not necessarily for use inside the class.
 
-base case           : case that ends recursion
-
-Folds
+FOLDS
 =====
-Fold is just an adaptation of structural recursion where we allow the user to pass in the functions we apply at
-each case. As structural recursion is the generic pattern for writing any function that transforms an algebraic
-datatype, fold is the concrete realisation of this generic pattern. That is, fold is the generic transformation
-or iteration method. Any function you care to write on an algebraic datatype can be written in terms of fold.
+Fold is just an adaptation of structural recursion where we allow the user to pass in the functions we apply at each case. As structural recursion is the generic pattern for writing any function that transforms an algebraic datatype, fold is the concrete realisation of this generic pattern. That is, fold is the generic transformation or iteration method. Any function you care to write on an algebraic datatype can be written in terms of fold.
 
-Fold Pattern
+FOLD PATTERN
 ============
 For an algebraic datatype A, fold converts it to a generic type B. Fold is a structural recursion with:
 
-one function parameter for each case in A;
-each function takes as parameters the fields for its associated class;
-if A is recursive, any function parameters that refer to a recursive field take a parameter of type B.
-The right-hand side of pattern matching cases, or the polymorphic methods as appropriate, consists of calls
-to the appropriate function.
+*) One function parameter for each case in A;
+*) Each function takes as parameters the fields for its associated class;
+*) If A is recursive, any function parameters that refer to a recursive field take a parameter of type B.
+*) The right-hand side of pattern matching cases, or the polymorphic methods as appropriate, consists of calls to the appropriate function.
 
 
-Placeholder syntax                  : (_: Int) * 2 is expanded by the compiler to (a: Int) => a * 2
-convert method calls to functions   : simply follow a method with an underscore, eg.
-                                      (Sum.sum_) // res: (Int, Int) => Int = <function2>
-Multiple Parameter Lists            : def example(x: Int)(y: Int) = x + y
-                                      example(1)(2) // res: Int = 3
+Placeholder syntax                  (_: Int) * 2 is expanded by the compiler to (x: Int) => x * 2
+Convert method calls to functions   Simply follow a method with an underscore, eg.
+                                    (Sum.sum_) // res: (Int, Int) => Int = <function2>
+Multiple Parameter Lists            def example(x: Int)(y: Int) = x + y
+                                    example(1)(2) // res: Int = 3
 
 GENERIC IMPLEMENTATION OF PRODUCT TYPE
 ======================================
-Pairs
-Tuples      : Tuple1[A] through to Tuple22[A, B, C, ...]
-              sugared form: (A, B, C, ...)
-              fields are called _1, _2, _3, etc
+Tuple       Tuple1[A] through to Tuple22[A, B, C, ...]
+            Sugared form: (A, B, C, ...)
+            Fields are called _1, _2, _3, etc
+Pair        Tuple2
+
 
 SUM, GENERIC IMPLEMENTATION OF SUM TYPE
 =======================================
@@ -336,20 +302,17 @@ final case class Empty[A]() extends Maybe[A]
 
 Scala API: Option
 
-Many expressions may sometimes produce a value and sometimes not.
-If we can encode an optional value in the type system, the compiler will force us to consider the case where a
-value is not available, thus increasing the robustness of our code.
+Many expressions may sometimes produce a value and sometimes not. If we can encode an optional value in the type system, the compiler will force us to consider the case where a value is not available, thus increasing the robustness of our code.
 
-
-Map
-===
+MAP (method)
+============
 Examples:
 We have a List[Int] and a function Int => User, and we want to get a List[User]
-we have a Maybe[User] and a function User => Order, and we want a Maybe[Order].
+We have a Maybe[User] and a function User => Order, and we want a Maybe[Order].
 We have a Sum[String, Order] and a function Order => Double, and we want Sum[String, Double]
 
 What these all have in common is we have a type F[A] and a function A => B, and we want a result F[B].
-The method that performs this operation is called map.
+The method that performs this operation is called 'map'. Example:
 
 sealed trait LinkedList[A] {
   def map[B](fn: A => B): LinkedList[B] =
@@ -358,6 +321,8 @@ sealed trait LinkedList[A] {
       case End() => End[B]()
     }
 }
+final case class Pair(hd: A, tl: LinkedList[A]) extends LinkedList[A]
+final case class End() extends LinkedList[A]
 
 FlatMap
 =======
@@ -367,7 +332,7 @@ we have Maybe[User] and User => Maybe[Order], and we want Maybe[Order].
 We have Sum[String, Order] and a function Order => Sum[String, Id], and we want Sum[String, Id].
 
 What these all have in common is we have a type F[A] and a function A => F[B], and we want a result F[B].
-The method that performs this operation is called flatMap.
+The method that performs this operation is called 'flatMap'. Example:
 
 sealed trait Maybe[A] {
   def flatMap[B](fn: A => Maybe[B]): Maybe[B] =
@@ -381,18 +346,17 @@ final case class Empty[A]() extends Maybe[A]
 
 Functors and Monads
 ===================
-A type like F[A] with a map method is called a functor.
-If a functor also has a flatMap method it is called a monad.
+A type like F[A] with a 'map'-method is called a 'Functor'.
+If a functor also has a 'flatMap'-method, it is called a 'Monad'.
 
-There is a little bit more to being a functor or monad. For a monad we require a constructor, typically
+There is a little bit more to being a Functor or Monad. For a Monad we require a constructor, typically
 called point, and there are some algebraic laws that our map and flatMap operations must obey.
 
-The general idea is a monad represents a value in some context. The context depends on the monad we’re using.
+The general idea is a Monad represents a value in some context. The context depends on the monad we’re using.
 We’ve seen examples where the context is:
-
-an optional value, such as we might get when retrieving a value from a database;
-an sum of values, which might represent a error message and a value we’re computing with; and
-a list of values.
+- An optional value, such as we might get when retrieving a value from a database;
+- An sum of values, which might represent a error message and a value we’re computing with; and
+- A list of values.
 
 We use map when we want to transform the value within the context to a new value, while keeping the context the same.
 We use flatMap when we want to transform the value and provide a new context.
@@ -400,17 +364,16 @@ We use flatMap when we want to transform the value and provide a new context.
 VARIANCE
 ========
 Invariance, Covariance, and Contravariance
-If we have some type Foo[A], and A is a subtype of B, is Foo[A] a subtype of Foo[B]?
-:
-* A type Foo[T] is invariant in terms of T, meaning that the types Foo[A] and Foo[B] are unrelated regardless of the
-relationship between A and B. This is the default variance of any generic type in Scala.
 
-* A type Foo[+T] is covariant in terms of T, meaning that Foo[A] is a supertype of Foo[B] if A is a supertype of B.
-Most Scala collection classes are covariant in terms of their contents.
+Q: If we have some type Foo[A], and A is a subtype of B, is Foo[A] a subtype of Foo[B]?
 
-* A type Foo[-T] is contravariant in terms of T, meaning that Foo[A] is a subtype of Foo[B] if A is a supertype of B.
-The only example of contravariance that I am aware of is function arguments.
+A:
 
+* A type Foo[T] is Invariant in terms of T, meaning that the types Foo[A] and Foo[B] are unrelated regardless of the relationship between A and B. This is the default variance of any generic type in Scala.
+
+* A type Foo[+T] is Covariant in terms of T, meaning that Foo[A] is a supertype of Foo[B] if A is a supertype of B. Most Scala collection classes are covariant in terms of their contents.
+
+* A type Foo[-T] is Contravariant in terms of T, meaning that Foo[A] is a subtype of Foo[B] if A is a supertype of B. The only example of contravariance that I am aware of is function arguments.
 
 
 VARIANCE AND FUNCTIONS
@@ -877,6 +840,63 @@ MATCHING
 ========
 New pattern:
 a: B            : matches any value of type B and binds it to a variable a
+
+
+
+PATTERN MATCHING REDUX
+======================
+Types of pattern matching:
+1. Case class patterns
+2. Sequence patterns
+3. Standard patterns
+4. Custom patterns
+
+3. Standard patterns (built in)
+-------------------------------
+3.1 Literal patterns        Literal patterns match a particular value.
+3.2 Constant patterns       Identifiers starting with an uppercase letter are constants that match a single predefined constant value
+3.3 Alternative patterns    Vertical bars can be used to specify alternatives
+3.4 Variable capture        Identifiers starting with lowercase letters bind values to variables.
+                            x @ y, allows us to capture a value in a variable x while also matching it against a pattern y
+3.5 Wildcard patterns       The _ symbol is a pattern that matches any value and simply ignores it.
+3.6 Type patterns           x: Y - The pattern matches any value of type Y and binds it to x
+3.7 Tuple patterns          Tuples of any arity can be matched with parenthesised expressions as eg. (a,b)
+3.8 Guard expressions       We can add an extra condition to any case clause by suffixing the pattern with the keyword if and a regular Scala expression.
+
+4. Custom patterns
+------------------
+4.1 Extractors
+Extractor patterns (like f(a,b,c) )are defined by creating objects with a method called unapply or unapplySeq.
+
+Subtypes:
+4.1.1 Case class extractors     The companion object of every case class is equipped with an extractor that creates a pattern of the same arity as the constructor.
+4.1.2 Regular expressions       Scala’s regular expression objects are outfitted with a pattern that binds each of the captured groups
+4.1.3 Lists and Sequences       The List and Seq companion objects act as patterns that match fixed-length sequences. Nil matches the empty list.
+                                There is also a singleton object :: that matches the head and tail of a list.
+                                NB: binary extractor patterns can also be written infix.
+
+4.1.4 Custom fixed-length extractors
+---------------------------------------
+def unapply(value: A): Boolean           // pattern with 0 parameters
+def unapply(value: A): Option[B]                      // 1 parameter
+def unapply(value: A): Option[(B1, B2)]               // 2 parameters
+                                                      // etc...
+4.1.5 Custom variable-length extractors
+------------------------------------------
+def unapplySeq(value: A): Option[Seq[B]]
+
+Variable-length extractors match a value only if the pattern in the case clause is the same length as the Seq returned by unapplySeq.
+
+4.1.6 Wildcard sequence patterns
+There is one final type of pattern that can only be used with variable-length extractors. The wildcard sequence pattern, written _*, matches zero or more arguments from a variable-length pattern and discards their values.
+
+Example:
+
+"the quick brown fox" match {
+  case Words(a, b, rest @ _*) => rest
+}
+// res: Seq[String] = WrappedArray("brown", "fox")
+
 
 
 
