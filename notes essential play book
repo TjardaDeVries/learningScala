@@ -5,6 +5,16 @@ Play is distributed in two components:
 * an SBT plugin that customises the default behaviour of SBT, adding and altering commands to help us build applications for the web.
 This section covers the behaviour of SBT with the Play plugin activated.
 
+
+SBT
+===
+Commands:
+clean
+compile
+run
+Watch mode:
+~compile
+
 FUNDAMENTAL CONCEPTS
 ====================
 Actions         Actions are functions from Requests to Results
@@ -97,6 +107,19 @@ def exampleAction = Action { request =>
   }
 }
 
+Or:
+
+def exampleAction2 = Action { request =>
+  (request.body.asText map handleText) orElse
+  (request.body.asJson map handleJson) orElse
+  (request.body.asXml  map handleXml)  getOrElse
+  BadRequest("You've got me stumped!")
+}
+
+def handleText(data: String): Result = ???
+def handleJson(data: JsValue): Result = ???
+def handleXml(data: NodeSeq): Result = ???
+
 Headers and Cookies
 -------------------
 object RequestDemo extends Controller {
@@ -127,5 +150,173 @@ val path: String = request.path
 // The query string, split into name/value pairs:
 val query: Map[String, Seq[String]] = request.queryString
 
+CONSTRUCTING RESULTS
+====================
 
+Setting The Status Code
+-----------------------
+val result1: Result = Ok("Success!")
+val result2: Result = NotFound("Is it behind the fridge?")
+val result3: Result = Status(401)("Access denied, Dave.")
+
+Adding Content
+--------------
+the final steps in an Action tend to be as follows:
+
+1. Convert the result of an action to a type that Play can serialize:
+*) HTML using a Twirl template, or;
+*) a JsValue to return the data as JSON, or;
+*) a Scala NodeSeq to return the data as XML, or;
+*) a String or Array[Byte].
+2. Use the serializable data to create a Result.
+3. Tweak HTTP headers and so on.
+4. Return the Result.
+
+Tweaking the Result
+-------------------
+we can change the Content-Type header (without changing the content) using the as method;
+we can add and/or alter HTTP headers using withHeaders;
+we can add and/or alter cookies using withCookies.
+
+
+Futures
+=======
+def ultimateAnswer: Int = {
+  // seven and a half million years later...
+  42
+}
+
+val f: Future[Int] = Future {
+  // this code is run asynchronously:
+  ultimateAnswer
+}
+println("Continuing to run in parallel...")
+
+f.onSuccess {
+  // register a 'callback', the argument is the value of f
+  case number =>
+    println("The answer is " + number + ". Now, what was the question?")
+}
+
+output:
+
+Continuing to run in parallel...
+The answer is 42. Now, what was the question?
+
+/
+callback is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time. Big drawback: callbacks don't return values! So they are not useful in production code...
+
+COMPOSING FUTURES
+=================
+1. using map: (The map method allows us to sequence a future with a block of *synchronous* code. )
+--------------------------------------------------------------------------------------------------
+trait Future[A] {
+  def map[B](func: A => B): Future[B] = // ...
+}
+
+Example:
+
+def conversion(value: Int): String =
+  value.toString
+
+val f1: Future[Int]    = Future { ultimateAnswer }
+val f2: Future[Int]    = f1 map { _ + 1 }
+val f3: Future[Double] = f1 map { _.toDouble }
+
+val f4: Future[String] = f1 map { _ + 1 } map (conversion) map { _ + "!" }
+
+2. using flatmap: (The flatMap method allows us to sequence a future with a block of *asynchronous* code. )
+-----------------------------------------------------------------------------------------------------------
+trait Future[A] {
+  def flatMap[B](func: A => Future[B]): Future[B] = // ...
+}
+
+Example:
+
+def longRunningConversion(value: Int): Future[String] =
+  Future {
+    // some length of time...
+    value.toString
+  }
+
+val f1: Future[Int]    = Future(ultimateAnswer)
+val f2: Future[String] = f1.flatMap(value => Future(value + 1))
+val f3: Future[String] = f1.flatMap(longRunningConversion)
+
+Future is a monad. This means we can use it with regular Scala for-comprehensions.
+
+def getTraffic(hostname: String): Future[Double] = {
+  // ...non-blocking HTTP code...
+}
+
+SINGLE EXPRESSION
+
+val total: Future[Double] = for {
+  t1 <- getTraffic("server1")
+  t2 <- getTraffic("server2")
+  t3 <- getTraffic("server3")
+} yield t1 + t2 + t3
+
+CREATE-THEN-COMPOSE
+
+val traffic1 = getTraffic("server1")
+val traffic2 = getTraffic("server2")
+val traffic3 = getTraffic("server3")
+
+val total: Future[Double] = for {
+  t1 <- traffic1
+  t2 <- traffic2
+  t3 <- traffic3
+} yield t1 + t2 + t3
+
+The create-then-compose takes about 1/3 of the time it takes to execute the single expression!!!!
+
+SEQUENCING FUTURES USING FOR-COMPREHENSIONS
+===========================================
+1. Work out which calculations are dependent on the results of which others:
+
+poll server 1    \
+poll server 2    -+->    total the results
+poll server 3    /
+
+2. Declare futures for each independent steps (no incoming arrows) in your graph:
+
+val traffic1 = getTraffic("server1")
+val traffic2 = getTraffic("server2")
+val traffic3 = getTraffic("server3")
+
+3. Use for-comprehensions to combine the immediate results:
+
+val total: Future[Double] = for {
+  t1 <- traffic1
+  t2 <- traffic2
+  t3 <- traffic3
+} yield t1 + t2 + t3
+
+4. Repeat for the next step in the sequence (if any).
+
+FUTURE.SEQUENCE
+===============
+package scala.concurrent
+
+object Future {
+  def sequence[A](futures: Seq[Future[A]]): Future[Seq[A]] =
+    // ...
+}
+
+We can use this method to convert any sequence of futures into a future containing a sequence of the results.
+
+Example:
+
+def totalTraffic(hostnames: Seq[String]): Future[Double] = {
+  val trafficFutures: Seq[Future[Double]] =
+    hostnames.map(getTraffic)
+
+  val futureTraffics: Future[Seq[Double]] =
+    Future.sequence(trafficFutures)
+
+  futureTraffics.map { (traffics: Seq[Double]) =>
+    traffics.sum
+  }
+}
 
